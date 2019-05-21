@@ -129,6 +129,8 @@ view: order_items {
   }
 
   measure: count_orders {
+    label: "Order Count"
+    description: "Distinct Orders Count with Drill fields"
     type: count_distinct
     drill_fields: [detail*]
     sql: ${TABLE}.order_id ;;
@@ -136,6 +138,8 @@ view: order_items {
   }
 
   measure: gross_margin {
+    label: "Gross Margin"
+    description: "Gross Margin = Sales Price - Inventory Items Cost"
     type: number
     drill_fields: [detail*]
     sql: ${sale_price}-${inventory_items.cost} ;;
@@ -150,6 +154,8 @@ view: order_items {
   }
 
   measure: prev_month_sale {
+    label: "Previous Month Total Sale"
+    description: "Previous Month Total Sale with drill fields"
     type:  sum
     sql: ${TABLE}.sale_price ;;
     drill_fields: [detail*]
@@ -161,12 +167,31 @@ view: order_items {
   }
 
   measure: total_returend_price  {
+    label: "Total Returned Price"
+    description: "Returned Price with filter is_returned = YES"
     type: sum
     sql: ${TABLE}.sale_price;;
     drill_fields: [detail*]
     filters: {field: is_returned
       value: "YES"}
     value_format_name: usd_0
+  }
+
+
+  measure: completed_orders_percent {
+    type: number
+    sql:(${completed_orders})/ nullif(${count_orders},0) ;;
+    value_format_name: percent_1
+  }
+
+  measure: completed_orders {
+    type: count_distinct
+
+    sql: ${TABLE}.order_id ;;
+    filters: {
+      field: status
+      value: "Complete"
+    }
   }
 
   measure: sale_by_gender {

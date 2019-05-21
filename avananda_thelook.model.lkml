@@ -15,7 +15,7 @@ explore: distribution_centers {}
 
 explore: events {
   join: users {
-    type: left_outer
+    type: inner
     sql_on: ${events.user_id} = ${users.id} ;;
     relationship: many_to_one
   }
@@ -72,6 +72,15 @@ explore: order_items {
     relationship: many_to_one
   }
 
+  join: products_brand {
+    from: products
+    view_label: "Products Brand"
+    type: left_outer
+    sql_on: ${inventory_items.product_sku} = ${products_brand.sku}.sku} ;;
+    fields: [products_brand.brand]
+    relationship: many_to_one
+  }
+
   join: distribution_centers {
     view_label: "Distribution Centers"
     type: left_outer
@@ -88,5 +97,7 @@ explore: products {
     relationship: many_to_one
   }
 }
+
+
 
 explore: users {}

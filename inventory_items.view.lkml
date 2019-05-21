@@ -83,12 +83,21 @@ view: inventory_items {
   }
 
   measure: total_cost {
+    label: "Total Cost"
+    description: "sum of Cost in USD format"
     type: sum
     sql: ${TABLE}.cost ;;
     value_format_name: usd_0
   }
 
-
+  measure: total_product_cost {
+    label: "Total Unique Product Cost"
+    description: "Total Unique Products Cost by Product ID"
+    type: sum_distinct
+    sql_distinct_key: ${product_id} ;;
+    sql: ${TABLE}.cost ;;
+    value_format_name: usd_0
+  }
 
   measure: count {
     type: count
